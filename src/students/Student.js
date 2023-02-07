@@ -1,6 +1,6 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
-export default function Student(state, action) {
+export default function Student() {
     let [list, setList] = useState([
         {
             id: 1,
@@ -13,6 +13,7 @@ export default function Student(state, action) {
             address: "HB"
         }
     ]);
+    let [id, setId] = useState("");
     let [name, setName] = useState("");
     let [address, setAddress] = useState("");
     const create = () => {
@@ -24,7 +25,7 @@ export default function Student(state, action) {
         setName("");
         setAddress("");
     }
-    const update = (id) => {
+    const update = () => {
         let index;
         list.map((item) => {
             if (item.id === id) {
@@ -33,7 +34,7 @@ export default function Student(state, action) {
         })
         list[index].name = name;
         list[index].address = address;
-        return display();
+        setList([...list])
     }
     const del = (id) => {
         let index;
@@ -42,9 +43,10 @@ export default function Student(state, action) {
                 index = list.indexOf(item);
             }
         })
-        list.splice(index);
+        list.splice(index, 1);
         console.log(index)
-        return display();
+        console.log(list)
+        setList([...list])
     }
     const display = () => {
         return (
@@ -53,12 +55,14 @@ export default function Student(state, action) {
                     <div>
                         <p key={index}>{item.id}, {item.name}, {item.address}</p>
                         <button onClick={() => {
-                            document.getElementById("inpName").value = item.name;
-                            document.getElementById("inpAddress").value = item.address;
-                            // document.getElementById("action").
+                            setName(item.name)
+                            setAddress(item.address)
+                            setId(item.id)
+                            document.getElementById("createBtn").style.display = "none";
+                            document.getElementById("updateBtn").style.display = "block";
                         }}>Edit
                         </button>
-                        <button onClick={del(item.id)}>Delete</button>
+                        <button onClick={() => del(item.id)}>Delete</button>
                     </div>
                 ))}
                 <input id="inpName" type="text" value={name} onChange={(e) => {
@@ -67,10 +71,9 @@ export default function Student(state, action) {
                 <input id="inpAddress" type="text" value={address} onChange={(e) => {
                     setAddress(e.target.value)
                 }}/>
-                <span id="action">
-                <button onClick={create}>Create
+                <button onClick={create} id="createBtn">Create</button>
+                <button onClick={update} id="editBtn" style={{display:"none"}}>Edit
                 </button>
-                </span>
             </>
         )
     }
