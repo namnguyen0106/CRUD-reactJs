@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 export default function Student() {
     let [list, setList] = useState([
@@ -35,6 +35,10 @@ export default function Student() {
         list[index].name = name;
         list[index].address = address;
         setList([...list])
+        setName("");
+        setAddress("");
+        document.getElementById("createBtn").style.display = "block";
+        document.getElementById("editBtn").style.display = "none";
     }
     const del = (id) => {
         let index;
@@ -51,29 +55,47 @@ export default function Student() {
     const display = () => {
         return (
             <>
-                {list.map((item, index) => (
-                    <div>
-                        <p key={index}>{item.id}, {item.name}, {item.address}</p>
-                        <button onClick={() => {
-                            setName(item.name)
-                            setAddress(item.address)
-                            setId(item.id)
-                            document.getElementById("createBtn").style.display = "none";
-                            document.getElementById("updateBtn").style.display = "block";
-                        }}>Edit
-                        </button>
-                        <button onClick={() => del(item.id)}>Delete</button>
-                    </div>
-                ))}
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {list.map((item, index) => (
+                        <>
+                            <tr>
+                                <td><p key={index}>{item.id}</p></td>
+                                <td><p key={index}>{item.name}</p></td>
+                                <td><p key={index}>{item.address}</p></td>
+                                <td>
+                                    <button class="btn btn-light" onClick={() => {
+                                        setName(item.name)
+                                        setAddress(item.address)
+                                        setId(item.id)
+                                        document.getElementById("createBtn").style.display = "none";
+                                        document.getElementById("editBtn").style.display = "block";
+                                    }}>Edit
+                                    </button>
+                                    <button onClick={() => del(item.id)} class="btn btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </>
+
+                    ))}
+                    </tbody>
+                </table>
                 <input id="inpName" type="text" value={name} onChange={(e) => {
                     setName(e.target.value)
                 }}/>
                 <input id="inpAddress" type="text" value={address} onChange={(e) => {
                     setAddress(e.target.value)
-                }}/>
-                <button onClick={create} id="createBtn">Create</button>
-                <button onClick={update} id="editBtn" style={{display:"none"}}>Edit
-                </button>
+                }}/><br/>
+                <button onClick={create} id="createBtn" class="btn btn-success">Create</button>
+                <button onClick={update} id="editBtn" style={{display: "none"}} class="btn btn-success">Edit</button>
             </>
         )
     }
